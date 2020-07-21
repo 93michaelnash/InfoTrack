@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using InfoTrackProject.Models;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace InfoTrackProject.Helpers
 {
     public static class StringHelpers
     {
-        public static int CheckLocationAndOccurrencesOfPatternInString(string content, string pattern)
+        public static UrlOccurences FindOccurencesOfPatternAndUrlInContent(string content, string regexPattern, string urlToFind)
         {
-            int count = 0, x = 0;
-            while ((x = content.IndexOf(pattern, x)) != -1)
-            {
-                x += pattern.Length;
-                count++;
-            }
-            return count;
-        }
+            var regex = new Regex(regexPattern);
 
+            var matches = regex.Matches(content).Cast<Match>().ToList();
+
+            var indexes = matches.Select((x, i) => new { i, x })
+                .Where(x => x.ToString().Contains(urlToFind))
+                .Select(x => x.i + 1)
+                .ToList();
+
+            return new UrlOccurences
+            {
+                Count = indexes.Count(),
+                Indexes = indexes
+            };
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InfoTrackProject.Models;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace InfoTrackProject.Services
             _client = new HttpClient();
         }
 
-        public abstract Task<int> GetSiteHitsForKeyword(string query, string siteUrl, int results);
+        public abstract Task<UrlOccurences> GetSiteOccurencesForKeyword(string query, string siteUrl, int results);
 
         internal async Task<string> GetPageHtmlContent(Uri url)
         {

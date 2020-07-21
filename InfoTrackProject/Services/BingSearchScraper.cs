@@ -1,23 +1,22 @@
 ﻿using InfoTrackProject.Helpers;
+using InfoTrackProject.Models;
 using System;
 using System.Threading.Tasks;
 
 namespace InfoTrackProject.Services
 {
-    public class GoogleSearchScraper : SearchScraper
+    public class BingSearchScraper : SearchScraper
     {
-        private const string UrlPrefix = "<a href=\"/url?q=";
-        private const string GoogleSearchPrefix = "https://www.google.com.au/search?q=";
-        private const string ResultsPrefix = "&num=";
+        private const string BingRegexPattern = "<li class=\"b_algo\">(.*?)</li>";
+        private const string BingSearchPrefix = "https://www.bing.com.au/search?q=";
+        private const string ResultsPrefix = "&count=";
 
-        public override async Task<int> GetSiteHitsForKeyword(string query, string siteUrl, int results)
+        public override async Task<UrlOccurences> GetSiteOccurencesForKeyword(string query, string siteUrl, int results)
         {
             try
             {
-                var htmlContent = await GetPageHtmlContent(UriHelpers.CreateSearchUrl(GoogleSearchPrefix, query, ResultsPrefix, results));
-                var wellFormedUri = UriHelpers.CreateWellFormedUri(siteUrl);
-                var siteToFind = $"{UrlPrefix}{wellFormedUri}";
-                var occurences = StringHelpers.CheckLocationAndOccurrencesOfPatternInString(htmlContent, siteToFind);
+                var htmlContent = await GetPageHtmlContent(UriHelpers.CreateSearchUrl(BingSearchPrefix, query, ResultsPrefix, results));
+                var occurences = StringHelpers.FindOccurencesOfPatternAndUrlInContent(htmlContent, BingRegexPattern, siteUrl);
                 return occurences;
             }
             catch (Exception ex)

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using InfoTrackProject.Models;
 using System.Threading.Tasks;
 
 namespace InfoTrackProject.Services
 {
     public interface ISearchScraper 
     {
-        Task<int> GetSiteHitsForKeyword(string query, string siteUrl, int results);
+        Task<UrlOccurences> GetSiteOccurencesForKeyword(string query, string siteUrl, int results);
     }
 }

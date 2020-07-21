@@ -45,8 +45,8 @@ namespace InfoTrackProject.Controllers
             {
                 _logger.LogInformation($"Getting site hits for keywords: {model.Keywords}, site: {model.URL} using {model.SelectedSearchOption.Name}");
                 var scraper = _searchScraperFactory.GetSearchScraperFor(model.SelectedSearchOption.Name);
-                var hits = await scraper.GetSiteHitsForKeyword(model.Keywords, model.URL, Convert.ToInt32(model.SelectedResultCount.Value));
-                return new JsonResult(hits);
+                var occurences = await scraper.GetSiteOccurencesForKeyword(model.Keywords, model.URL, Convert.ToInt32(model.SelectedResultCount.Value));
+                return new JsonResult(occurences);
             }
             catch (Exception ex)
             {

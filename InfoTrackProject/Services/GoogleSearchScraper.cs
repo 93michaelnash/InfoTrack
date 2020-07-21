@@ -1,25 +1,22 @@
 ﻿using InfoTrackProject.Helpers;
+using InfoTrackProject.Models;
 using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace InfoTrackProject.Services
 {
-    public class BingSearchScraper : SearchScraper
+    public class GoogleSearchScraper : SearchScraper
     {
-        private const string UrlPrefix = "<a href=\"";
-        private const string BingSearchPrefix = "https://www.bing.com.au/search?q=";
-        private const string ResultsPrefix = "&count=";
+        private const string GoogleRegexPattern = "<div class=\"ZINbbc xpd O9g5cc uUPGi\">(.*?)</div>";
+        private const string GoogleSearchPrefix = "https://www.google.com.au/search?q=";
+        private const string ResultsPrefix = "&num=";
 
-        public override async Task<int> GetSiteHitsForKeyword(string query, string siteUrl, int results)
+        public override async Task<UrlOccurences> GetSiteOccurencesForKeyword(string query, string siteUrl, int results)
         {
             try
             {
-                var htmlContent = await GetPageHtmlContent(UriHelpers.CreateSearchUrl(BingSearchPrefix, query, ResultsPrefix, results));
-                var wellFormedUri = UriHelpers.CreateWellFormedUri(siteUrl);
-                var siteToFind = $"{UrlPrefix}{wellFormedUri}";
-                var occurences = StringHelpers.CheckLocationAndOccurrencesOfPatternInString(htmlContent, siteToFind);
+                var htmlContent = await GetPageHtmlContent(UriHelpers.CreateSearchUrl(GoogleSearchPrefix, query, ResultsPrefix, results));
+                var occurences = StringHelpers.FindOccurencesOfPatternAndUrlInContent(htmlContent, GoogleRegexPattern, siteUrl);
                 return occurences;
             }
             catch (Exception ex)
