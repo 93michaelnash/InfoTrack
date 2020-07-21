@@ -1,0 +1,60 @@
+﻿@model SearchViewModel
+
+@{
+    ViewData["Title"] = "Get Site Hits";
+}
+
+<section class="pt-120 pb-120 bg-dark form_1">
+    <div class="container px-xl-0">
+        <form class="bg-light mx-auto mw-430 radius10 pt-40 px-50 pb-30">
+            <h2 class="mb-40 small text-center">Get Site Hits</h2>
+            <div class="mb-20 input_holder">
+                <input asp-for="Keywords" type="text" name="keywords" minlength="1" placeholder="Keywords" class="input border-gray focus-action-1 color-heading placeholder-heading w-full" />
+            </div>
+            <div class="mb-20 input_holder">
+                <input asp-for="URL" required type="text" name="URL" placeholder="URL" class="input border-gray focus-action-1 color-heading placeholder-heading w-full" />
+            </div>
+            @foreach (var item in Model.SearchOptions)
+            {
+                <div>
+                    @if (@item.Name == Model.SelectedSearchOption.Name)
+                    {
+                        <input asp-for="SelectedSearchOption" type="radio"
+                               name="searchOptions" value="@item.Name" id="SelectedSearchOption@(item.Name)"
+                               class="input d-none border-gray focus-action-1"
+                               checked />
+                    }
+                    else
+                    {
+                        <input asp-for="SelectedSearchOption" type="radio"
+                               name="searchOptions" value="@item.Name" id="SelectedSearchOption@(item.Name)"
+                               class="input d-none border-gray focus-action-1" />
+                    }
+                    <label class="mt-25 color-heading w-full" for="SelectedSearchOption@(item.Name)">@item.Name</label>
+                </div>
+            }
+            <div>
+                <label class="mt-25 color-heading w-full" for="ResultCount">Results per page</label>
+                <select asp-for="SelectedResultCount" asp-items="Model.ResultCountOptions" class="input border-gray focus-action-1" id="ResultCount">
+                </select>
+            </div>
+            <div>
+                <button class="btn mt-25 action-1 w-full" type="button" onclick="scrapeSite()">Search</button>
+            </div>
+            <div class="results" id="resultsBox" hidden>
+                <div class="mt-50 hr bg-gray h-1">
+                </div>
+                <div class="mt-25 f-18 medium color-heading text-center">
+                    <span class="" id="resultsBoxTitle">@Model.SelectedSearchOption.Name Hits</span>
+                    <div>
+                        <label class="mt-25 color-heading w-full" name="searchResults" id="resultsLabel"></label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/search.js" asp-append-version="true"></script>
+}
